@@ -24,6 +24,20 @@ class SkillTreeController extends AbstractActionController
             return $view;
         }
 
+
+        // --- Build a lookup of group positions ---
+        $groupPositions = [];
+        if (!empty($data['groups']) && is_array($data['groups'])) {
+            foreach ($data['groups'] as $groupId => $grp) {
+                if (isset($grp['x'], $grp['y'])) {
+                    $groupPositions[$groupId] = [
+                        'x' => (float) $grp['x'],
+                        'y' => (float) $grp['y']
+                    ];
+                }
+            }
+        }
+
         // Build a map of nodes by ID for quick lookup
         $nodesMap = [];
         foreach ($data['nodes'] as $node) {
@@ -46,19 +60,33 @@ $visited = [];
 $cyNodes = [];
 $cyEdges = [];
 
-$addNode = function($nodeId) use (&$addNode, &$visited, $nodesMap, &$cyNodes, &$cyEdges) {
+$addNode = function($nodeId) use (&$addNode, &$visited, $nodesMap, &$cyNodes, &$cyEdges, &$groupPositions ) {
     if (isset($visited[$nodeId]) || !isset($nodesMap[$nodeId])) return;
 
     $node = $nodesMap[$nodeId];
     $visited[$nodeId] = true;
 
-    // Node
-    $cyNodes[] = [
+    // Determine node label
+    $label = $node['name'] ?? '';
+
+    // Determine position from group
+    $position = null;
+    if (!empty($node['group']) && isset($groupPositions[$node['group']])) {
+        $position = $groupPositions[$node['group']];
+    }
+
+    // Build the Cytoscape node
+    $cyNode = [
         'data' => [
             'id' => $nodeId,
-            'label' => $node['name'] ?? ''
+            'label' => $label
         ]
     ];
+    if ($position !== null) {
+        $cyNode['position'] = $position;
+    }
+
+    $cyNodes[] = $cyNode;
 
     // Edges
     if (!empty($node['out']) && is_array($node['out'])) {
