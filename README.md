@@ -2,6 +2,10 @@ This is a sample project meant to render data from https://raw.githubusercontent
 
 todos:
  - incorporate group information to determine node positioning
+ - determine "viewing window" cordinates
+ - render each group within cordinates as well as attached edges within the "viewing window".
+ - re-render on "viewing window" move or resize
+ - come up with better name than "viewing window"
  - add images?
  - allow allocation/ unallocation of nodes
 
