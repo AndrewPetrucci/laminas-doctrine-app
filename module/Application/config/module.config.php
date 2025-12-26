@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Controller\SkillTreeController;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -11,6 +12,16 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 return [
     'router' => [
         'routes' => [
+             'skilltree' => [
+                'type' => 'Literal',
+                'options' => [
+                    'route'    => '/skilltree',
+                    'defaults' => [
+                        'controller' => SkillTreeController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'home' => [
                 'type'    => Literal::class,
                 'options' => [
@@ -35,6 +46,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
+            SkillTreeController::class => InvokableFactory::class,
             Controller\IndexController::class => InvokableFactory::class,
         ],
     ],

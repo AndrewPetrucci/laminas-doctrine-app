@@ -1,0 +1,40 @@
+<?php if (!empty($this->error)) : ?>
+    <p style="color:red;"><?= $this->escapeHtml($this->error) ?></p>
+<?php else : ?>
+    <div id="cy" style="width: 100%; height: 800px;"></div>
+
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+    <script>
+    const cyNodes = <?= json_encode($this->cyNodes) ?>;
+    const cyEdges = <?= json_encode($this->cyEdges) ?>;
+    const rootId = <?= json_encode($this->rootId) ?>;
+
+    const cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements: { nodes: cyNodes, edges: cyEdges },
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'label': 'data(label)',
+                    'background-color': '#0074D9',
+                    'width': 20,
+                    'height': 20,
+                    'font-size': 8
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 1,
+                    'line-color': '#ccc'
+                }
+            }
+        ],
+        layout: { name: 'cose', animate: false }
+    });
+
+    // Highlight the root node
+    cy.$(`#${rootId}`).style('background-color', 'red');
+    </script>
+<?php endif; ?>
