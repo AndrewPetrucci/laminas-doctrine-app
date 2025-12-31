@@ -1,0 +1,7 @@
+<nav style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-radius: 4px;">
+    <ul style="list-style: none; padding: 0; margin: 0; display: flex; gap: 15px;">
+        <?php foreach ($this->navbar() as $item): ?>
+            <li><a href="<?= htmlspecialchars($item['route']) ?>" style="padding: 8px 15px; background-color: #0074D9; color: white; text-decoration: none; border-radius: 4px;"><?= htmlspecialchars($item['title']) ?></a></li>
+        <?php endforeach; ?>
+    </ul>
+</nav>

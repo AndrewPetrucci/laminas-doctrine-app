@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Controller\ChessController;
 use Application\Controller\SkillTreeController;
+use Application\View\Helper\NavbarHelper;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -12,7 +14,18 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 return [
     'router' => [
         'routes' => [
-             'skilltree' => [
+             'chess' => [
+                'type' => 'Literal',
+                'options' => [
+                    'route'    => '/chess',
+                    'defaults' => [
+                        'controller' => ChessController::class,
+                        'action'     => 'index',
+                    ],
+                    'order' => 1,
+                ],
+            ],
+            'skilltree' => [
                 'type' => 'Literal',
                 'options' => [
                     'route'    => '/skilltree',
@@ -20,6 +33,7 @@ return [
                         'controller' => SkillTreeController::class,
                         'action'     => 'index',
                     ],
+                    'order' => 2,
                 ],
             ],
             'home' => [
@@ -30,6 +44,7 @@ return [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
                     ],
+                    'order' => 0,
                 ],
             ],
             'application' => [
@@ -40,14 +55,24 @@ return [
                         'controller' => Controller\IndexController::class,
                         'action'     => 'index',
                     ],
+                    'order' => 99,
                 ],
             ],
         ],
     ],
     'controllers' => [
         'factories' => [
+            ChessController::class => InvokableFactory::class,
             SkillTreeController::class => InvokableFactory::class,
             Controller\IndexController::class => InvokableFactory::class,
+        ],
+    ],
+    'view_helpers' => [
+        'factories' => [
+            'navbar' => function($sm) {
+                $app = $sm->getServiceLocator()->get('Application');
+                return new NavbarHelper($app);
+            },
         ],
     ],
     'view_manager' => [
