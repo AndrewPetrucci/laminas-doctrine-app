@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Application;
 
 use Application\Controller\ChessController;
+use Application\Controller\DirectoryController;
 use Application\Controller\SkillTreeController;
 use Application\View\Helper\NavbarHelper;
+use Application\View\Helper\RoutingTreeHelper;
+use Application\View\Helper\Factory\RoutingTreeHelperFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -20,6 +23,17 @@ return [
                     'route'    => '/chess',
                     'defaults' => [
                         'controller' => ChessController::class,
+                        'action'     => 'index',
+                    ],
+                    'order' => 1,
+                ],
+            ],
+             'directory' => [
+                'type' => 'Literal',
+                'options' => [
+                    'route'    => '/directory',
+                    'defaults' => [
+                        'controller' => DirectoryController::class,
                         'action'     => 'index',
                     ],
                     'order' => 1,
@@ -63,6 +77,7 @@ return [
     'controllers' => [
         'factories' => [
             ChessController::class => InvokableFactory::class,
+            DirectoryController::class => InvokableFactory::class,
             SkillTreeController::class => InvokableFactory::class,
             Controller\IndexController::class => InvokableFactory::class,
         ],
@@ -73,6 +88,7 @@ return [
                 $app = $sm->getServiceLocator()->get('Application');
                 return new NavbarHelper($app);
             },
+            'routingTree' => RoutingTreeHelperFactory::class,
         ],
     ],
     'view_manager' => [

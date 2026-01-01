@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application\View\Helper;
 
+use Application\Helper\RouteExclusions;
 use Laminas\View\Helper\AbstractHelper;
 use Laminas\Mvc\Application;
 
@@ -29,10 +30,9 @@ class NavbarHelper extends AbstractHelper
         
         // Build navigation from routes
         $nav = [];
-        $routesToExclude = ['application', 'doctrine_orm_module_yuml']; // Exclude these from nav
         
         foreach ($routes as $routeName => $routeConfig) {
-            if (in_array($routeName, $routesToExclude)) {
+            if (RouteExclusions::isExcluded($routeName)) {
                 continue;
             }
             
